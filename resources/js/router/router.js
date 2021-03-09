@@ -38,12 +38,14 @@ const routes = [
     {
         path: "/login",
         name: "Login",
-        component: Login
+        component: Login,
+        meta: { guest: true }
     },
     {
         path: "/register",
         name: "Register",
-        component: Register
+        component: Register,
+        meta: { guest: true }
     }
 ];
 
@@ -53,7 +55,7 @@ const router = new VueRouter({
 });
 
 function loggedIn() {
-    return false;
+    return localStorage.getItem("token"); // if token = true else false
 }
 
 //Proteger nuestra pagina si no estan logeados
@@ -64,6 +66,16 @@ router.beforeEach((to, from, next) => {
         if (!loggedIn()) {
             next({
                 path: "/login",
+                query: { redirect: to.fullPath }
+            });
+        } else {
+            next();
+        }
+    } else if (to.matched.some(record => record.meta.guest)) {
+        if (loggedIn()) {
+            //so if user loggeIn true   -> redirect to dashboard
+            next({
+                path: "/dashboard",
                 query: { redirect: to.fullPath }
             });
         } else {
