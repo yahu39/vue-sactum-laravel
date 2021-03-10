@@ -7,6 +7,8 @@
       <router-link to="/dashboard">Dashboard</router-link>
     </p>
  -->
-    <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>

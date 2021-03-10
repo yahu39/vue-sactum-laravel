@@ -9,7 +9,7 @@
                 <v-toolbar-title>Register form</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form">
+                <v-form ref="form" lazy-validation>
                   <v-text-field
                     label="Name"
                     prepend-icon="mdi-account"
@@ -85,6 +85,7 @@ export default {
           this.snackbar = true;
           this.$refs.form.reset();
           this.$refs.form.resetValidation();
+          this.errors = {};
         })
 
         //console.log(response.data))

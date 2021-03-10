@@ -1,6 +1,6 @@
 <template>
-  <v-app id="inspire">
-    <v-app id="inspire">
+  <div>
+    <v-app id="inspire" v-if="!isLoading">
       <v-navigation-drawer v-model="drawer" app>
         <v-list-item two-line>
           <v-list-item-avatar>
@@ -50,7 +50,9 @@
         <v-container class="fill-height" fluid>
           <v-row align="center" justify="center">
             <v-col class="text-center">
-              <router-view class="main-view" name="MainView"></router-view>
+              <transition name="fade" mode="out-in">
+                <router-view class="main-view" name="MainView"></router-view>
+              </transition>
             </v-col>
           </v-row>
         </v-container>
@@ -59,13 +61,19 @@
         <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
       </v-footer>
     </v-app>
-  </v-app>
+    <div class="loading-page" v-else>
+      <loading-page></loading-page>
+    </div>
+  </div>
 </template>
 
 <script>
+import LoadingPage from "./LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
+      isLoading: true,
       drawer: true,
       currentUser: {},
       token: localStorage.getItem("token"),
@@ -80,7 +88,10 @@ export default {
         })
         .catch((errors) => {
           console.log(errors);
-        });
+        })
+        .finally(() => {
+          setTimeout(() => (this.isLoading = false));
+        }, 2000); //for 2 seconds
     },
     logout() {
       axios
